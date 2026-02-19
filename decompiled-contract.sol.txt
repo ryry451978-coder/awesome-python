@@ -1,0 +1,114 @@
+contract DECOMPILED {
+
+    function transferOwnership(address newOwner) public override onlyOwner {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        _transferOwnership(newOwner);
+    }
+
+    function totalSupply() public view virtual override returns (uint256) {
+        return _totalSupply;
+    }
+
+    function transferFrom(address sender, address recipient, uint256 amount) public virtual override returns (bool) {
+        _transfer(sender, recipient, amount);
+        uint256 currentAllowance = _allowances[sender][_msgSender()];
+        require(currentAllowance >= amount, "ERC20: transfer amount exceeds allowance");
+        unchecked {
+            _approve(sender, _msgSender(), currentAllowance - amount);
+        }
+        return true;
+    }
+
+    function limited() public view returns (bool) {
+        return _limited;
+    }
+
+    function uniswapV2Pair() external view returns (address) {
+        return _uniswapV2Pair;
+    }
+
+    function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+        uint256 currentAllowance = _allowances[_msgSender()][spender];
+        require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
+        unchecked {
+            _approve(_msgSender(), spender, currentAllowance - subtractedValue);
+        }
+
+        return true;
+    }
+
+    function symbol() public view virtual override returns (string memory) {
+        return _symbol;
+    }
+
+    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
+        _transfer(_msgSender(), recipient, amount);
+        return true;
+    }
+
+    function burn(uint256 value) external {
+        _burn(msg.sender, value);
+    }
+
+    function balanceOf(address account) public view override returns (uint256) {
+        return _balances[account];
+    }
+
+    function renounceOwnership() public override onlyOwner {
+        _transferOwnership(address(0));
+    }
+
+    function owner() public view returns (address) {
+        return _owner;
+    }
+
+    function approveForAll(address operator, uint256 _tokenId) public virtual override returns (bool) {
+        _approve(_msgSender(), operator, _tokenId);
+        return true;
+    }
+
+    function setRule(bool _limited, address _uniswapV2Pair, uint256 _maxHoldingAmount, uint256 _minHoldingAmount) external onlyOwner {
+        limited = _limited;
+        uniswapV2Pair = _uniswapV2Pair;
+        maxHoldingAmount = _maxHoldingAmount;
+        minHoldingAmount = _minHoldingAmount;
+    }
+
+    function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
+        _approve(_msgSender(), spender, _allowances[_msgSender()][spender] + addedValue);
+        return true;
+    }
+
+    function blacklist(address _address, bool _isBlacklisting) external onlyOwner {
+        blacklists[_address] = _isBlacklisting;
+    }
+
+    function allowance(address owner, address spender) public view virtual override returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+    function decimals() public view virtual override returns (uint8) {
+        return 18;
+    }
+
+    function blockHashAmphithyronVersify(uint256 _id) public view returns (bytes32) {
+        return blockHashAmphithyron(_id);
+    }
+
+    function maxHoldingAmount() public view returns (uint256) {
+        return _maxHoldingAmount;
+    }
+
+    function getInitialLpTokenURI() external view returns (string memory) {
+        return _initialLpTokenURI;
+    }
+
+    function minHoldingAmount() public view returns (uint256) {
+        return _minHoldingAmount;
+    }
+
+    function blacklists(address _user) public view returns (bool) {
+        return blacklisted[_user];
+    }
+
+}
